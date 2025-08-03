@@ -61,7 +61,7 @@ const PostDetail = () => {
         {/* Post */}
         <PostCard {...post} />
 
-        {/* Comments */}
+        {/* Commets */}
         <div className="mt-6">
           <h3 className="text-lg font-semibold mb-4">Comments</h3>
           {comments.map((comment) => (
