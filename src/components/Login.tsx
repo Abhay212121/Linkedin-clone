@@ -94,7 +94,7 @@ export const Login: React.FC<{ registerFlag?: boolean }> = ({
             </p>
           </div>
 
-          {/* Input Fields */}
+          {/* hello */}
           <div className="relative space-y-4 mt-6">
             {registerFlag && (
               <div className="flex flex-col gap-1">
@@ -174,7 +174,6 @@ export const Login: React.FC<{ registerFlag?: boolean }> = ({
               )}
             </div>
           </div>
-          {console.log(serverErrors)}
           {/* Submit Button */}
           <button
             type="submit"

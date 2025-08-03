@@ -34,7 +34,11 @@ const Feed = () => {
         localStorage.setItem("job", response.data.job);
       }
     } catch (error) {
-      console.log("Error updating job info:", error.message);
+      if (error instanceof Error) {
+        console.log(error.message);
+      } else {
+        console.log("Unexpected error", error);
+      }
     }
   };
 
@@ -61,7 +65,11 @@ const Feed = () => {
         setPosts(response.data.posts);
       }
     } catch (error) {
-      console.log(error.message);
+      if (error instanceof Error) {
+        console.log(error.message);
+      } else {
+        console.log("Unexpected error", error);
+      }
     }
   };
   useEffect(() => {

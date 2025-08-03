@@ -29,7 +29,11 @@ const CreatePost: React.FC<CreatePostProps> = ({ onPostCreated }) => {
           navigate("/login");
         }
       } catch (error) {
-        console.log(`err:`, error.message);
+        if (error instanceof Error) {
+          console.log(error.message);
+        } else {
+          console.log("Unexpected error", error);
+        }
       }
     }
   };

@@ -26,7 +26,7 @@ const PostCard = ({
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(likes);
 
-  const handleLike = async (postId) => {
+  const handleLike = async (postId: any) => {
     setLikeCount((prev) => (isLiked ? prev - 1 : prev + 1));
     setIsLiked(!isLiked);
 
@@ -34,7 +34,7 @@ const PostCard = ({
 
     try {
       const response = await axios.post(
-        `https://linkedin-clone-backend-xrxp.onrender.com/post/updatelike`,
+        `/post/updatelike`,
         {
           postId, // make sure you have this prop available
           like: !isLiked, // true if user just liked it
@@ -45,7 +45,11 @@ const PostCard = ({
       );
       console.log(response.data);
     } catch (error) {
-      console.log(error.message);
+      if (error instanceof Error) {
+        console.log(error.message);
+      } else {
+        console.log("Unexpected error", error);
+      }
     }
   };
 
