@@ -22,7 +22,7 @@ export const Login: React.FC<{ registerFlag?: boolean }> = ({
     if (registerFlag) {
       const registerUser = async () => {
         const response = await axios.post(
-          `http://localhost:3000/user/register`,
+          `https://linkedin-clone-backend-xrxp.onrender.com/user/register`,
           data
         );
         console.log(response.data.status);
@@ -43,7 +43,7 @@ export const Login: React.FC<{ registerFlag?: boolean }> = ({
     } else {
       const loginUser = async () => {
         const response = await axios.post(
-          `http://localhost:3000/user/login`,
+          `https://linkedin-clone-backend-xrxp.onrender.com/user/login`,
           data
         );
         console.log(response.data.status);

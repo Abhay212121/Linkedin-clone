@@ -34,7 +34,7 @@ const PostCard = ({
 
     try {
       const response = await axios.post(
-        `http://localhost:3000/post/updatelike`,
+        `https://linkedin-clone-backend-xrxp.onrender.com/post/updatelike`,
         {
           postId, // make sure you have this prop available
           like: !isLiked, // true if user just liked it

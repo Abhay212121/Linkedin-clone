@@ -14,7 +14,7 @@ const Header = () => {
             className="flex items-center cursor-pointer"
           >
             <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-[#0077b5]">
-              ConnectPro
+              ClickedIn
             </h1>
           </div>
 

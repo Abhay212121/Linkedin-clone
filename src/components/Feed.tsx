@@ -24,7 +24,7 @@ const Feed = () => {
     const token = localStorage.getItem("token");
     try {
       const response = await axios.post(
-        "http://localhost:3000/user/updateprofile",
+        `https://linkedin-clone-backend-xrxp.onrender.com/user/updateprofile`,
         { job, org },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -48,9 +48,12 @@ const Feed = () => {
   const getPosts = async () => {
     const token = localStorage.getItem("token");
     try {
-      const response = await axios.get(`http://localhost:3000/post/getposts`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.get(
+        `https://linkedin-clone-backend-xrxp.onrender.com/post/getposts`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       console.log(response.data);
       if (response.data.status === 404) {
         setPopup(true);

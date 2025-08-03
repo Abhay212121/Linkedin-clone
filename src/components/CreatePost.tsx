@@ -16,7 +16,7 @@ const CreatePost: React.FC<CreatePostProps> = ({ onPostCreated }) => {
       const token = localStorage.getItem("token");
       try {
         const response = await axios.post(
-          `http://localhost:3000/post/create`,
+          `https://linkedin-clone-backend-xrxp.onrender.com/post/create`,
           { postContent },
           { headers: { Authorization: `Bearer ${token}` } }
         );
