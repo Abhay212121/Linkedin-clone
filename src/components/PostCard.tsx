@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ThumbsUp, MessageCircle, Share2, MoreHorizontal } from "lucide-react";
 import axios from "axios";
+import BaseUrl from "../utils/constant";
 
 interface PostCardProps {
   id: number;
@@ -34,10 +35,10 @@ const PostCard = ({
 
     try {
       const response = await axios.post(
-        `/post/updatelike`,
+        `${BaseUrl}/post/updatelike`,
         {
-          postId, // make sure you have this prop available
-          like: !isLiked, // true if user just liked it
+          postId,
+          like: !isLiked,
         },
         {
           headers: { Authorization: `Bearer ${token}` },

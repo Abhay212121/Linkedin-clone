@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { useForm, type FieldValues } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import BaseUrl from "../utils/constant";
 
 export const Login: React.FC<{ registerFlag?: boolean }> = ({
   registerFlag = false,
@@ -21,10 +22,7 @@ export const Login: React.FC<{ registerFlag?: boolean }> = ({
     console.log(data);
     if (registerFlag) {
       const registerUser = async () => {
-        const response = await axios.post(
-          `https://linkedin-clone-backend-xrxp.onrender.com/user/register`,
-          data
-        );
+        const response = await axios.post(`${BaseUrl}/user/register`, data);
         console.log(response.data.status);
         if (response.data.status === 200) {
           navigate("/login");
@@ -42,10 +40,7 @@ export const Login: React.FC<{ registerFlag?: boolean }> = ({
       registerUser();
     } else {
       const loginUser = async () => {
-        const response = await axios.post(
-          `https://linkedin-clone-backend-xrxp.onrender.com/user/login`,
-          data
-        );
+        const response = await axios.post(`${BaseUrl}/user/login`, data);
         console.log(response.data.status);
         if (response.data.status === 200) {
           console.log(response.data.msg);

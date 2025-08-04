@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import BaseUrl from "../utils/constant";
 
 type CreatePostProps = {
   onPostCreated: () => void;
@@ -16,7 +17,7 @@ const CreatePost: React.FC<CreatePostProps> = ({ onPostCreated }) => {
       const token = localStorage.getItem("token");
       try {
         const response = await axios.post(
-          `https://linkedin-clone-backend-xrxp.onrender.com/post/create`,
+          `${BaseUrl}/post/create`,
           { postContent },
           { headers: { Authorization: `Bearer ${token}` } }
         );

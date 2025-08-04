@@ -3,6 +3,7 @@ import CreatePost from "./CreatePost";
 import PostCard from "./PostCard";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import BaseUrl from "../utils/constant";
 
 type Post = {
   post_id: number;
@@ -24,7 +25,7 @@ const Feed = () => {
     const token = localStorage.getItem("token");
     try {
       const response = await axios.post(
-        `https://linkedin-clone-backend-xrxp.onrender.com/user/updateprofile`,
+        `${BaseUrl}/user/updateprofile`,
         { job, org },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -32,6 +33,8 @@ const Feed = () => {
       if (response.data.status === 200) {
         setPopup(false);
         localStorage.setItem("job", response.data.job);
+        navigate("/");
+        getPosts();
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -52,12 +55,9 @@ const Feed = () => {
   const getPosts = async () => {
     const token = localStorage.getItem("token");
     try {
-      const response = await axios.get(
-        `https://linkedin-clone-backend-xrxp.onrender.com/post/getposts`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const response = await axios.get(`${BaseUrl}/post/getposts`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       console.log(response.data);
       if (response.data.status === 404) {
         setPopup(true);
@@ -79,7 +79,7 @@ const Feed = () => {
   return (
     <>
       {popup && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 backdrop-blur-sm bg-white/30 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full text-center space-y-4">
             <h2 className="text-xl font-semibold text-gray-800">
               Complete your profile
@@ -113,6 +113,7 @@ const Feed = () => {
           </div>
         </div>
       )}
+
       <main className="flex-1 max-w-2xl">
         <CreatePost onPostCreated={getPosts} />
         <div className="space-y-0">
