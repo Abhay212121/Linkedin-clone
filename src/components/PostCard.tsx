@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ThumbsUp, MessageCircle, Share2, MoreHorizontal } from "lucide-react";
 import axios from "axios";
 import BaseUrl from "../utils/constant";
+import { useNavigate } from "react-router-dom";
 
 interface PostCardProps {
   id: number;
@@ -26,6 +27,20 @@ const PostCard = ({
 }: PostCardProps) => {
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(likes);
+  const navigate = useNavigate();
+  const [copied, setCopied] = useState(false);
+
+  const handleShare = async (id: number) => {
+    try {
+      await navigator.clipboard.writeText(
+        `https://linkedin-clone-frontend-sage.vercel.app/post/${id}`
+      );
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy:", err);
+    }
+  };
 
   const handleLike = async (postId: any) => {
     setLikeCount((prev) => (isLiked ? prev - 1 : prev + 1));
@@ -100,7 +115,7 @@ const PostCard = ({
             onClick={() => handleLike(id)}
             className={`flex-1 ${
               isLiked ? "text-[#0077b5]" : "text-[#6b7280]"
-            } hover:bg-[#e5f4fb] hover:text-[#0a0a0a] h-9 rounded-md px-3 inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-[#ffffff] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0077b5] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50`}
+            } hover:bg-[#e5f4fb] hover:text-[#0a0a0a] h-9 rounded-md px-3 inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-[#ffffff] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0077b5] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 cursor-pointer`}
           >
             <ThumbsUp
               className={`h-4 w-4 mr-2 ${isLiked ? "fill-current" : ""}`}
@@ -108,14 +123,20 @@ const PostCard = ({
             Like
           </button>
 
-          <button className="flex-1 text-[#6b7280] hover:bg-[#f1f2f3] hover:text-[#0a0a0a] h-9 rounded-md px-3 inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-[#ffffff] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0077b5] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50">
+          <button
+            onClick={() => navigate(`/post/${id}`)}
+            className="flex-1 text-[#6b7280] hover:bg-[#f1f2f3] hover:text-[#0a0a0a] h-9 rounded-md px-3 inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-[#ffffff] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0077b5] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 cursor-pointer"
+          >
             <MessageCircle className="h-4 w-4 mr-2" />
             Comment
           </button>
 
-          <button className="flex-1 text-[#6b7280] hover:bg-[#f1f2f3] hover:text-[#0a0a0a] h-9 rounded-md px-3 inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-[#ffffff] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0077b5] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50">
+          <button
+            onClick={() => handleShare(id)}
+            className="flex-1 text-[#6b7280] hover:bg-[#f1f2f3] hover:text-[#0a0a0a] h-9 rounded-md px-3 inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-[#ffffff] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0077b5] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 cursor-pointer"
+          >
             <Share2 className="h-4 w-4 mr-2" />
-            Share
+            {copied ? "Link Copied!" : "Share"}
           </button>
         </div>
       </div>
