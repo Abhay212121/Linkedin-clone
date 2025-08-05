@@ -78,9 +78,10 @@ const Feed = () => {
 
   return (
     <>
+      {/* Profile Completion Popup */}
       {popup && (
-        <div className="fixed inset-0 backdrop-blur-sm bg-white/30 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full text-center space-y-4">
+        <div className="fixed inset-0 backdrop-blur-sm bg-white/30 flex items-center justify-center z-50 px-4">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md text-center space-y-4">
             <h2 className="text-xl font-semibold text-gray-800">
               Complete your profile
             </h2>
@@ -91,7 +92,7 @@ const Feed = () => {
             <input
               type="text"
               placeholder="Your Job Role"
-              className="w-full border cursor-pointer border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={job}
               onChange={(e) => setJob(e.target.value)}
             />
@@ -99,14 +100,14 @@ const Feed = () => {
             <input
               type="text"
               placeholder="Organization"
-              className="w-full border border-gray-300 cursor-pointer rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={org}
               onChange={(e) => setOrg(e.target.value)}
             />
 
             <button
               onClick={handleSubmitJobInfo}
-              className="px-4 py-2 bg-blue-600 cursor-pointer text-white rounded hover:bg-blue-700 transition w-full"
+              className="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
             >
               Submit
             </button>
@@ -114,9 +115,11 @@ const Feed = () => {
         </div>
       )}
 
-      <main className="flex-1 max-w-2xl">
+      {/* Main Content */}
+      <main className="flex-1 w-full px-4 sm:px-6 md:px-8 mx-auto max-w-2xl mt-6">
         <CreatePost onPostCreated={getPosts} />
-        <div className="space-y-0">
+
+        <div className="space-y-4 mt-6">
           {posts ? (
             posts.map((post: any) => (
               <PostCard
@@ -134,7 +137,7 @@ const Feed = () => {
               />
             ))
           ) : (
-            <p className="text-center min-h-[100vh] text-gray-500">
+            <p className="text-center text-gray-500 min-h-[20vh]">
               Loading posts...
             </p>
           )}

@@ -5,13 +5,13 @@ const Footer = () => {
   const navigate = useNavigate();
 
   return (
-    <footer className="sticky bottom-0 z-40 backdrop-blur-md bg-[#ffffff] border-t border-[#e5e7eb]">
+    <footer className="sticky bottom-0 z-40 backdrop-blur-md bg-white border-t border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col sm:flex-row items-center justify-between h-16 text-sm text-gray-600">
+        <div className="flex flex-col sm:flex-row items-center justify-between h-auto sm:h-16 py-4 sm:py-0 text-sm text-gray-600 gap-2 sm:gap-0">
           {/* Left - Branding */}
           <div
             onClick={() => navigate("/")}
-            className="flex items-center cursor-pointer mb-2 sm:mb-0"
+            className="flex items-center cursor-pointer"
           >
             <h2 className="text-lg sm:text-xl font-semibold tracking-tight text-[#0077b5]">
               ClickedIn
@@ -22,7 +22,7 @@ const Footer = () => {
           </div>
 
           {/* Right - Links */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <a
               href="https://github.com/Abhay212121"
               target="_blank"

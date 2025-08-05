@@ -1,4 +1,4 @@
-import { User, LogOut, Search } from "lucide-react";
+import { User, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import SearchBoxWithDropdown from "./SearchBox";
 
