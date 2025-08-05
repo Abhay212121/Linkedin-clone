@@ -1,5 +1,6 @@
-import { User, LogOut } from "lucide-react";
+import { User, LogOut, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import SearchBoxWithDropdown from "./SearchBox";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -17,6 +18,8 @@ const Header = () => {
               ClickedIn
             </h1>
           </div>
+
+          <SearchBoxWithDropdown />
 
           <div className="flex items-center space-x-4">
             <button
