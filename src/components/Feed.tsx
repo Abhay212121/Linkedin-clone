@@ -130,11 +130,13 @@ const Feed = () => {
                 content={post.post_content}
                 timestamp={post.created_at}
                 likes={post.like_count}
-                comments={post.like_count}
+                comments={post.comments_count}
               />
             ))
           ) : (
-            <p className="text-center text-gray-500">Loading posts...</p>
+            <p className="text-center min-h-[100vh] text-gray-500">
+              Loading posts...
+            </p>
           )}
         </div>
       </main>

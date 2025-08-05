@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BaseUrl from "../utils/constant";
+import placeholderImg from "../assets/placeholder.svg";
 
 type CreatePostProps = {
   onPostCreated: () => void;
@@ -12,49 +13,51 @@ const CreatePost: React.FC<CreatePostProps> = ({ onPostCreated }) => {
   const navigate = useNavigate();
 
   const handlePost = async () => {
-    if (postContent.trim()) {
-      console.log("Posting:", postContent);
-      const token = localStorage.getItem("token");
-      try {
-        const response = await axios.post(
-          `${BaseUrl}/post/create`,
-          { postContent },
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+    const trimmedContent = postContent.trim();
+    if (!trimmedContent) return;
 
-        if (response.data.status === 200) {
-          setPostContent("");
-          onPostCreated();
-        } else if (response.data.status === 404) {
-          localStorage.clear();
-          navigate("/login");
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.post(
+        `${BaseUrl}/post/create`,
+        { postContent: trimmedContent },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      } catch (error) {
-        if (error instanceof Error) {
-          console.log(error.message);
-        } else {
-          console.log("Unexpected error", error);
-        }
+      );
+
+      if (response.data.status === 200) {
+        setPostContent("");
+        onPostCreated();
+      } else if (response.data.status === 404) {
+        localStorage.clear();
+        navigate("/login");
       }
+    } catch (error) {
+      console.error("Post error:", error);
     }
   };
 
   return (
-    <div className="mb-6 rounded-lg border border-[#e5e7eb] bg-[#ffffff] text-[#0a0a0a] shadow-sm">
+    <div className="mb-6 rounded-lg border border-gray-200 bg-white text-gray-900 shadow-sm">
       <div className="p-6 pt-8">
         <div className="flex space-x-3">
-          <div className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full">
+          {/* Avatar */}
+          <div className="flex-shrink-0 h-10 w-10 rounded-full overflow-hidden bg-gray-100">
             <img
-              className="aspect-square h-full w-full"
-              src="/placeholder.svg"
-              alt="img not found"
+              src={placeholderImg}
+              alt="User avatar"
+              className="h-full w-full object-cover"
             />
-            <div className="absolute inset-0 flex items-center justify-center rounded-full bg-[#f4f4f5]" />
           </div>
+
+          {/* Input Field */}
           <div className="flex-1">
             <textarea
               placeholder="What do you want to talk about?"
-              className="w-full min-h-[80px] resize-none rounded-md border border-[#e5e7eb] bg-[#f7f9fa] px-3 py-2 text-sm placeholder:text-[#6b7280] focus:outline-none focus:ring-2 focus:ring-[#0077b5] focus:ring-offset-2 focus:ring-offset-[#f7f9fa] disabled:cursor-not-allowed disabled:opacity-50"
+              className="w-full min-h-[80px] resize-none rounded-md border border-gray-300 bg-gray-50 px-3 py-2 text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 focus:ring-offset-white"
               value={postContent}
               onChange={(e) => setPostContent(e.target.value)}
             />
@@ -62,7 +65,7 @@ const CreatePost: React.FC<CreatePostProps> = ({ onPostCreated }) => {
               <button
                 onClick={handlePost}
                 disabled={!postContent.trim()}
-                className="inline-flex items-center justify-center gap-2 rounded-md bg-[#0077b5] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#005582] focus:outline-none focus:ring-2 focus:ring-[#0077b5] focus:ring-offset-2 focus:ring-offset-[#f7f9fa] disabled:pointer-events-none disabled:opacity-50"
+                className="px-4 py-2 text-sm font-medium text-white bg-[#0077b5] rounded-md transition hover:bg-[#005582] focus:ring-2 focus:ring-offset-2 cursor-pointer focus:ring-[#0077b5] disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Post
               </button>

@@ -5,6 +5,7 @@ import Header from "./Header";
 import BaseUrl from "../utils/constant";
 import axios from "axios";
 import Loading from "./Loading";
+import Footer from "./Footer";
 
 const PostDetail = () => {
   const { postId } = useParams();
@@ -15,6 +16,7 @@ const PostDetail = () => {
     post_content: string;
     created_at: string;
     like_count: number;
+    comments_count: number;
   } | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [comments, setComments] = useState<
@@ -95,6 +97,7 @@ const PostDetail = () => {
       );
       console.log(response);
       if (response.data.status === 200) {
+        getPostData();
         getCommentData();
         setNewComment("");
       }
@@ -113,7 +116,7 @@ const PostDetail = () => {
   return (
     <>
       <Header />
-      <div className="max-w-2xl mx-auto mt-8 px-4">
+      <div className="max-w-2xl mx-auto mt-8 px-4 pb-12">
         {/* Post */}
         <PostCard
           key={post.post_id}
@@ -126,7 +129,7 @@ const PostDetail = () => {
           content={post.post_content}
           timestamp={post.created_at}
           likes={post.like_count}
-          comments={post.like_count}
+          comments={post.comments_count}
         />
 
         {/* Commets */}
@@ -149,19 +152,19 @@ const PostDetail = () => {
           {commentsFlag && (
             <div className="mb-10 bg-white border border-gray-200 rounded-lg shadow-sm p-4">
               <div className="flex items-start gap-4">
-                {/* User Avatar (optional placeholder) */}
+                {/* User Avatar */}
                 <img
                   src="/placeholder.svg"
                   alt="User avatar"
                   className="w-10 h-10 rounded-full object-cover"
                 />
 
-                {/* Textarea and button container */}
-                <div className="flex-1">
-                  <textarea
+                {/* Input and button container */}
+                <div className="flex flex-col flex-1 max-w-lg">
+                  <input
+                    type="text"
                     placeholder="Write a comment..."
-                    className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none transition-all shadow-sm"
-                    rows={3}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-sm"
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
                   />
@@ -169,9 +172,9 @@ const PostDetail = () => {
                   <div className="flex justify-end mt-2">
                     <button
                       onClick={handleAddComment}
-                      disabled={!newComment}
+                      disabled={!newComment.trim()}
                       className={`cursor-pointer hover:bg-blue-700 text-white text-sm px-5 py-2 rounded-md transition-all ${
-                        !newComment ? "bg-blue-400" : "bg-blue-600"
+                        !newComment.trim() ? "bg-blue-400" : "bg-blue-600"
                       }`}
                     >
                       Post Comment
@@ -206,6 +209,7 @@ const PostDetail = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </>
   );
 };
