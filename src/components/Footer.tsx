@@ -1,4 +1,4 @@
-import { Github, Mail } from "lucide-react";
+import { Github } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const Footer = () => {
