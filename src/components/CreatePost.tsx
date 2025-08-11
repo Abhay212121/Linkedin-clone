@@ -1,8 +1,9 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BaseUrl from "../utils/constant";
 import placeholderImg from "../assets/placeholder.svg";
+import { Image, Loader2, X } from "lucide-react";
 
 type CreatePostProps = {
   onPostCreated: () => void;
@@ -10,26 +11,61 @@ type CreatePostProps = {
 
 const CreatePost: React.FC<CreatePostProps> = ({ onPostCreated }) => {
   const [postContent, setPostContent] = useState("");
+  const [image, setImage] = useState<File | null>(null);
+  const [preview, setPreview] = useState("");
+  const [loading, setLoading] = useState<Boolean>(false);
   const navigate = useNavigate();
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const handleImgUpload = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    console.log(file);
+    if (file) {
+      setImage(file);
+      const previewUrl = URL.createObjectURL(file);
+      setPreview(previewUrl);
+    }
+    event.target.value = "";
+  };
+
+  useEffect(() => {
+    return () => {
+      if (preview) {
+        URL.revokeObjectURL(preview);
+      }
+    };
+  }, [preview]);
 
   const handlePost = async () => {
     const trimmedContent = postContent.trim();
-    if (!trimmedContent) return;
+    if (!trimmedContent && !image) return;
 
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.post(
-        `${BaseUrl}/post/create`,
-        { postContent: trimmedContent },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      setLoading(true);
+      //create form data
+      const formData = new FormData();
+      formData.append("postContent", trimmedContent);
+      if (image) {
+        formData.append("image", image);
+      }
+
+      const response = await axios.post(`${BaseUrl}/post/create`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       if (response.data.status === 200) {
         setPostContent("");
+        setPreview("");
         onPostCreated();
       } else if (response.data.status === 404) {
         localStorage.clear();
@@ -37,6 +73,8 @@ const CreatePost: React.FC<CreatePostProps> = ({ onPostCreated }) => {
       }
     } catch (error) {
       console.error("Post error:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -61,16 +99,59 @@ const CreatePost: React.FC<CreatePostProps> = ({ onPostCreated }) => {
               value={postContent}
               onChange={(e) => setPostContent(e.target.value)}
             />
-            <div className="mt-4 flex justify-end">
+            {preview && (
+              <div className="mt-4 relative inline-block max-w-full">
+                <img
+                  src={preview}
+                  alt="Preview"
+                  className="w-full max-h-64 sm:max-h-80 rounded-lg object-cover border border-gray-200 shadow-sm"
+                />
+                <button
+                  onClick={() => {
+                    setImage(null);
+                    setPreview("");
+                  }}
+                  className="absolute top-2 right-2 bg-white/80 hover:bg-white rounded-full p-1 shadow-md transition-transform hover:scale-110"
+                >
+                  <X className="w-5 h-5 text-red-500 hover:text-red-700 cursor-pointer" />
+                </button>
+              </div>
+            )}
+
+            <div className="flex items-center justify-between mt-4">
+              <div className="flex space-x-4">
+                <input
+                  type="file"
+                  accept="image/*"
+                  name="image"
+                  ref={fileInputRef}
+                  onChange={handleFileChange}
+                  className="hidden"
+                />
+
+                <button
+                  onClick={handleImgUpload}
+                  className="flex items-center cursor-pointer text-gray-500 hover:text-gray-900 text-sm font-medium px-3 py-2 rounded-md"
+                >
+                  <Image className="h-5 w-5 mr-2" />
+                  Photo
+                </button>
+              </div>
               <button
                 onClick={handlePost}
-                disabled={!postContent.trim()}
-                className="px-4 py-2 text-sm font-medium text-white bg-[#0077b5] rounded-md transition hover:bg-[#005582] focus:ring-2 focus:ring-offset-2 cursor-pointer focus:ring-[#0077b5] disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={!!((!postContent.trim() && !image) || loading)}
+                className={`py-2 text-sm font-medium text-white bg-[#0077b5] relative rounded-md transition hover:bg-[#005582] focus:ring-2 focus:ring-offset-2 cursor-pointer focus:ring-[#0077b5] disabled:opacity-50 disabled:cursor-not-allowed 
+    ${loading ? "pl-8 pr-4" : "px-4"}`}
               >
+                {loading && (
+                  <Loader2 className="w-4 h-4 absolute top-1/2 left-2 -translate-y-1/2 animate-spin" />
+                )}
                 Post
               </button>
             </div>
           </div>
+
+          <div></div>
         </div>
       </div>
     </div>

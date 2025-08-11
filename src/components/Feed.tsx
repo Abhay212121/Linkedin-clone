@@ -12,6 +12,7 @@ type Post = {
   post_content: string;
   created_at: string;
   like_count: number;
+  img_url: string;
 };
 
 const Feed = () => {
@@ -134,6 +135,7 @@ const Feed = () => {
                 timestamp={post.created_at}
                 likes={post.like_count}
                 comments={post.comments_count}
+                img_url={post.img_url}
               />
             ))
           ) : (

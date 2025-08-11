@@ -12,6 +12,7 @@ interface PostCardProps {
     avatar?: string;
   };
   content: string;
+  img_url: string;
   timestamp: string;
   likes: number;
   comments: number;
@@ -24,6 +25,7 @@ const PostCard = ({
   timestamp,
   likes,
   comments,
+  img_url,
 }: PostCardProps) => {
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(likes);
@@ -102,6 +104,16 @@ const PostCard = ({
       </div>
       <div className="pt-0 p-6">
         <p className="text-[#0a0a0a] mb-4 leading-relaxed">{content}</p>
+
+        {img_url && (
+          <div className="mb-4">
+            <img
+              src={img_url}
+              alt="Post"
+              className="w-full rounded-md border border-[#e5e7eb] object-cover"
+            />
+          </div>
+        )}
 
         {/* Engagement Stats */}
         <div className="flex items-center justify-between text-sm text-[#6b7280] mb-3 pb-3 border-b border-[#e5e7eb]">

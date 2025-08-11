@@ -17,6 +17,7 @@ const PostDetail = () => {
     created_at: string;
     like_count: number;
     comments_count: number;
+    img_url: string;
   } | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [comments, setComments] = useState<
@@ -130,6 +131,7 @@ const PostDetail = () => {
           timestamp={post.created_at}
           likes={post.like_count}
           comments={post.comments_count}
+          img_url={post.img_url}
         />
 
         {/* Commets */}

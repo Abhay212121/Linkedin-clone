@@ -75,7 +75,7 @@ const Profile = () => {
             </div>
           </div>
 
-          <div className="pt-6 p-6 pt-0">
+          <div className="p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <h3 className="font-semibold mb-3">About</h3>
@@ -159,6 +159,7 @@ const Profile = () => {
                 timestamp={post.timestamp}
                 likes={post.likes}
                 comments={post.comments}
+                img_url={post.img_url}
               />
             ))}
           </div>
