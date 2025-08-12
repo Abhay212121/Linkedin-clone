@@ -1,9 +1,18 @@
+import { useNavigate } from "react-router-dom";
 import Feed from "./Feed";
 import Footer from "./Footer";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
+import { useEffect } from "react";
 
 const Home = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) navigate("/login");
+  }, []);
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
