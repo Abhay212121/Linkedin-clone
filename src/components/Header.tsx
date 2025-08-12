@@ -24,7 +24,7 @@ const Header = () => {
           <div className="flex items-center space-x-4">
             <button
               onClick={() => {
-                navigate("/profile");
+                navigate(`/profile/${localStorage.getItem("userId")}`);
               }}
               className="flex flex-col items-center px-2 py-1 text-[#6b7280] hover:text-[#0077b5] transition-colors cursor-pointer hover:bg-[#fbfbfb]"
             >

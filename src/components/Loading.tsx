@@ -1,6 +1,10 @@
 import { motion } from "framer-motion";
 
-const Loading = () => {
+interface LoadingProps {
+  profile?: boolean;
+}
+
+const Loading = ({ profile = false }: LoadingProps) => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-white text-[#0077b5]">
       <motion.div
@@ -24,7 +28,9 @@ const Loading = () => {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5 }}
       >
-        Loading your personalized feed...
+        {profile
+          ? "Loading your profile..."
+          : "Loading your personalized feed..."}
       </motion.h2>
     </div>
   );

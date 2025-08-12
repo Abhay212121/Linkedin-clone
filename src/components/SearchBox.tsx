@@ -57,7 +57,7 @@ const SearchBoxWithDropdown = () => {
               onClick={() => {
                 setSearchTerm(item.user_name);
                 setIsFocused(false);
-                navigate(`user/${item.user_id}`);
+                navigate(`profile/${item.user_id}`);
               }}
             >
               {item.user_name}

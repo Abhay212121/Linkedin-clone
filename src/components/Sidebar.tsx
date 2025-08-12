@@ -35,7 +35,9 @@ const Sidebar = () => {
             </div>
           </div>
           <button
-            onClick={() => navigate("/profile")}
+            onClick={() =>
+              navigate(`/profile/${localStorage.getItem("userId")}`)
+            }
             className="w-full mt-4 h-9 px-3 rounded-md border border-[#0077b5] text-[#0077b5] text-sm font-medium hover:bg-[#e5f4fb] transition-colors focus:outline-none cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
           >
             View Profile

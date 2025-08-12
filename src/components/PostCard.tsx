@@ -12,7 +12,7 @@ interface PostCardProps {
     avatar?: string;
   };
   content: string;
-  img_url: string;
+  img_url?: string;
   timestamp: string;
   likes: number;
   comments: number;
@@ -109,8 +109,9 @@ const PostCard = ({
           <div className="mb-4">
             <img
               src={img_url}
+              onClick={() => navigate(`/post/${id}`)}
               alt="Post"
-              className="w-full rounded-md border border-[#e5e7eb] object-cover"
+              className="w-full rounded-md border border-[#e5e7eb] cursor-pointer object-cover"
             />
           </div>
         )}

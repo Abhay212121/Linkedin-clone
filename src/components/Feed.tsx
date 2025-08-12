@@ -21,13 +21,18 @@ const Feed = () => {
   const [job, setJob] = useState("");
   const [org, setOrg] = useState("");
   const [posts, setPosts] = useState<Post[] | null>(null);
+  const [location, setLocation] = useState("");
+  const [loadingLocation, setLoadingLocation] = useState(false);
+  const [about, setAbout] = useState("");
+  const [skills, setSkills] = useState("");
+  const [step, setStep] = useState(1);
 
   const handleSubmitJobInfo = async () => {
     const token = localStorage.getItem("token");
     try {
       const response = await axios.post(
         `${BaseUrl}/user/updateprofile`,
-        { job, org },
+        { job, org, location, about, skills },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       console.log(response.data);
@@ -73,45 +78,142 @@ const Feed = () => {
       }
     }
   };
+
   useEffect(() => {
     getPosts();
   }, []);
+
+  const handleGetLocation = () => {
+    if (!navigator.geolocation) {
+      alert("Geolocation is not supported by your browser.");
+      return;
+    }
+
+    setLoadingLocation(true);
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        try {
+          // Free reverse geocoding (Nominatim - OpenStreetMap)
+          const res = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
+          );
+          const data = await res.json();
+          const city =
+            data.address.city ||
+            data.address.town ||
+            data.address.village ||
+            "";
+          const country = data.address.country || "";
+          setLocation(`${city}, ${country}`);
+        } catch {
+          alert("Could not retrieve location name.");
+        } finally {
+          setLoadingLocation(false);
+        }
+      },
+      () => {
+        alert("Unable to retrieve your location.");
+        setLoadingLocation(false);
+      }
+    );
+  };
 
   return (
     <>
       {/* Profile Completion Popup */}
       {popup && (
+        // {true && (
         <div className="fixed inset-0 backdrop-blur-sm bg-white/30 flex items-center justify-center z-50 px-4">
           <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md text-center space-y-4">
             <h2 className="text-xl font-semibold text-gray-800">
-              Complete your profile
+              {step === 1 ? "Complete your profile" : "Tell us more about you"}
             </h2>
-            <p className="text-sm text-gray-500">
-              Please tell us about your current role.
-            </p>
 
-            <input
-              type="text"
-              placeholder="Your Job Role"
-              className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={job}
-              onChange={(e) => setJob(e.target.value)}
-            />
+            {step === 1 && (
+              <>
+                <p className="text-sm text-gray-500">
+                  Please tell us about your current role.
+                </p>
 
-            <input
-              type="text"
-              placeholder="Organization"
-              className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={org}
-              onChange={(e) => setOrg(e.target.value)}
-            />
+                <input
+                  type="text"
+                  placeholder="Your Job Role"
+                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  value={job}
+                  onChange={(e) => setJob(e.target.value)}
+                />
 
-            <button
-              onClick={handleSubmitJobInfo}
-              className="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-            >
-              Submit
-            </button>
+                <input
+                  type="text"
+                  placeholder="Organization"
+                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  value={org}
+                  onChange={(e) => setOrg(e.target.value)}
+                />
+
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="Location"
+                    className="flex-1 border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    onClick={handleGetLocation}
+                    className="px-3 py-2 bg-gray-200 rounded hover:bg-gray-300 transition cursor-pointer"
+                    disabled={loadingLocation}
+                  >
+                    {loadingLocation ? "..." : "📍"}
+                  </button>
+                </div>
+
+                <button
+                  onClick={() => setStep(2)}
+                  disabled={!job || !org || !location}
+                  className="w-full px-4 py-2 bg-blue-600 text-white disabled:bg-blue-300 disabled:cursor-not-allowed rounded hover:bg-blue-700 transition cursor-pointer"
+                >
+                  Next →
+                </button>
+              </>
+            )}
+
+            {step === 2 && (
+              <>
+                <textarea
+                  placeholder="About you"
+                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm h-24 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  value={about}
+                  onChange={(e) => setAbout(e.target.value)}
+                />
+
+                <input
+                  type="text"
+                  placeholder="Skills (comma separated)"
+                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  value={skills}
+                  onChange={(e) => setSkills(e.target.value)}
+                />
+
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setStep(1)}
+                    className="flex-1 px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition cursor-pointer"
+                  >
+                    ← Back
+                  </button>
+                  <button
+                    onClick={handleSubmitJobInfo}
+                    disabled={!about || !skills}
+                    className="flex-1 px-4 py-2 bg-blue-600 text-white disabled:bg-blue-300 disabled:cursor-not-allowed rounded hover:bg-blue-700 transition cursor-pointer"
+                  >
+                    Submit
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}
