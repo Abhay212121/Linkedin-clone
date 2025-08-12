@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 interface PostCardProps {
   id: number;
   author: {
+    id: number;
     name: string;
     title: string;
     avatar?: string;
@@ -95,11 +96,12 @@ const PostCard = ({
           <div className="flex space-x-3">
             <div className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full">
               <img
-                className="aspect-square h-full w-full"
+                onClick={() => navigate(`/profile/${author.id}`)}
+                className="aspect-square h-full w-full hover:cursor-pointer hover:scale-105 duration-100"
                 src={author.avatar || "/placeholder.svg"}
                 alt="Image not found"
               />
-              <div className="flex h-full w-full items-center justify-center rounded-full bg-[#f4f4f5]">
+              <div className="flex h-full w-full items-center justify-center rounded-full bg-[#f4f4f5] ">
                 {author.name
                   .split(" ")
                   .map((n) => n[0])
@@ -107,7 +109,12 @@ const PostCard = ({
               </div>
             </div>
             <div>
-              <h3 className="font-semibold text-[#0a0a0a]">{author.name}</h3>
+              <h3
+                onClick={() => navigate(`/profile/${author.id}`)}
+                className="font-semibold text-[#0a0a0a] cursor-pointer hover:underline"
+              >
+                {author.name}
+              </h3>
               <p className="text-sm text-[#6b7280]">{author.title}</p>
               <p className="text-xs text-[#6b7280]">
                 {new Date(timestamp).toLocaleString()}
@@ -136,7 +143,12 @@ const PostCard = ({
         {/* Engagement Stats */}
         <div className="flex items-center justify-between text-sm text-[#6b7280] mb-3 pb-3 border-b border-[#e5e7eb]">
           <span>{likeCount} likes</span>
-          <span>{comments} comments</span>
+          <span
+            className="cursor-pointer hover:underline"
+            onClick={() => navigate(`/post/${id}`)}
+          >
+            {comments} comments
+          </span>
         </div>
 
         {/* Action Buttons */}

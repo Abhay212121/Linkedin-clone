@@ -21,6 +21,7 @@ interface UserInterface {
 
 type PostInterface = {
   post_id: number;
+  user_id: number;
   user_name: string;
   user_jobrole: string;
   post_content: string;
@@ -102,6 +103,10 @@ const Profile = () => {
       setPfpLoading(false);
     }
   };
+
+  useEffect(() => {
+    window.scrollTo({ top: 0 });
+  });
 
   return (
     <div className="min-h-screen bg-[#f3f4f6]">
@@ -185,6 +190,7 @@ const Profile = () => {
                   key={post.post_id}
                   id={post.post_id}
                   author={{
+                    id: post.user_id,
                     name: post.user_name,
                     title: post.user_jobrole,
                     avatar: post.avatar,
