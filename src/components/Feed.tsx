@@ -5,6 +5,10 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import BaseUrl from "../utils/constant";
 
+interface FeedProps {
+  placeholderImg?: string;
+}
+
 type Post = {
   post_id: number;
   user_name: string;
@@ -12,10 +16,11 @@ type Post = {
   post_content: string;
   created_at: string;
   like_count: number;
+  avatar: string;
   img_url: string;
 };
 
-const Feed = () => {
+const Feed: React.FC<FeedProps> = ({ placeholderImg }) => {
   const navigate = useNavigate();
   const [popup, setPopup] = useState(false);
   const [job, setJob] = useState("");
@@ -220,7 +225,10 @@ const Feed = () => {
 
       {/* Main Content */}
       <main className="flex-1 w-full px-4 sm:px-6 md:px-8 mx-auto max-w-2xl mt-6">
-        <CreatePost onPostCreated={getPosts} />
+        <CreatePost
+          onPostCreated={getPosts}
+          placeholderImg={placeholderImg}
+        />
 
         <div className="space-y-4 mt-6">
           {posts ? (
@@ -231,7 +239,7 @@ const Feed = () => {
                 author={{
                   name: post.user_name,
                   title: post.user_jobrole,
-                  avatar: "/placeholder.svg",
+                  avatar: post.avatar,
                 }}
                 content={post.post_content}
                 timestamp={post.created_at}

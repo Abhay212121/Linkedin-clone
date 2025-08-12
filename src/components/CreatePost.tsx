@@ -2,14 +2,17 @@ import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BaseUrl from "../utils/constant";
-import placeholderImg from "../assets/placeholder.svg";
 import { Image, Loader2, X } from "lucide-react";
 
-type CreatePostProps = {
+interface CreatePostProps {
   onPostCreated: () => void;
-};
+  placeholderImg?: string;
+}
 
-const CreatePost: React.FC<CreatePostProps> = ({ onPostCreated }) => {
+const CreatePost: React.FC<CreatePostProps> = ({
+  onPostCreated,
+  placeholderImg,
+}) => {
   const [postContent, setPostContent] = useState("");
   const [image, setImage] = useState<File | null>(null);
   const [preview, setPreview] = useState("");
@@ -85,7 +88,7 @@ const CreatePost: React.FC<CreatePostProps> = ({ onPostCreated }) => {
           {/* Avatar */}
           <div className="flex-shrink-0 h-10 w-10 rounded-full overflow-hidden bg-gray-100">
             <img
-              src={placeholderImg}
+              src={placeholderImg || "/placeholder.svg"}
               alt="User avatar"
               className="h-full w-full object-cover"
             />

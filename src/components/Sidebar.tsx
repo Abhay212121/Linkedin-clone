@@ -1,5 +1,10 @@
 import { useNavigate } from "react-router-dom";
-const Sidebar = () => {
+
+interface SidebarProps {
+  placeholderImg?: string;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ placeholderImg }) => {
   const navigate = useNavigate();
 
   return (
@@ -13,7 +18,7 @@ const Sidebar = () => {
             <div className="mx-auto -mt-8 border-4 border-white relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full">
               <img
                 className="aspect-square h-full w-full"
-                src="/placeholder.svg"
+                src={placeholderImg || "/placeholder.svg"}
                 alt="Image not found"
               />
             </div>
