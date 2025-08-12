@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ThumbsUp, MessageCircle, Share2, MoreHorizontal } from "lucide-react";
 import axios from "axios";
 import BaseUrl from "../utils/constant";
@@ -27,7 +27,7 @@ const PostCard = ({
   comments,
   img_url,
 }: PostCardProps) => {
-  const [isLiked, setIsLiked] = useState(false);
+  const [isLiked, setIsLiked] = useState<boolean>(false);
   const [likeCount, setLikeCount] = useState(likes);
   const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
@@ -44,7 +44,7 @@ const PostCard = ({
     }
   };
 
-  const handleLike = async (postId: any) => {
+  const handleLike = async (postId: number) => {
     setLikeCount((prev) => (isLiked ? prev - 1 : prev + 1));
     setIsLiked(!isLiked);
 
@@ -70,6 +70,23 @@ const PostCard = ({
       }
     }
   };
+
+  useEffect(() => {
+    const checkIfLiked = async () => {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(`${BaseUrl}/post/checkifliked`, {
+        params: { postId: id },
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      console.log(response.data.status);
+      if (response.data.ans) {
+        setIsLiked(true);
+      } else {
+        setIsLiked(false);
+      }
+    };
+    checkIfLiked();
+  }, []);
 
   return (
     <div className="mb-4 hover:shadow-md transition-shadow rounded-lg border border-[#e5e7eb] bg-[#ffffff] text-[#0a0a0a] shadow-sm">
