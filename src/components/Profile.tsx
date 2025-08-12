@@ -41,17 +41,26 @@ const Profile = () => {
   const userIdNum = userid ? Number(userid) : null;
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [pfpLoading, setPfpLoading] = useState(false);
+  const [admin, setAdmin] = useState<boolean>(false);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
+    const token = localStorage.getItem("token");
     try {
       const [profileRes, postsRes] = await Promise.all([
-        axios.get(`${BaseUrl}/user/getuserprofile`, { params: { userIdNum } }),
+        axios.get(`${BaseUrl}/user/getuserprofile`, {
+          headers: { Authorization: `Bearer ${token}` },
+          params: { userIdNum },
+        }),
         axios.get(`${BaseUrl}/post/getuserposts`, { params: { userIdNum } }),
       ]);
-
-      if (profileRes.data.status === 200)
+      console.log(profileRes.data);
+      if (profileRes.data.status === 200) {
         setProfileData(profileRes.data.userData);
+        if (profileRes.data.matchFlag) {
+          setAdmin(true);
+        }
+      }
       if (postsRes.data.status === 200) setPostData(postsRes.data.posts);
     } catch (err) {
       console.error(err);
@@ -120,16 +129,27 @@ const Profile = () => {
               <div className="h-36 bg-gradient-to-r from-[#0077b5] via-[#00639b] to-[#005582] rounded-t-xl -mx-6 -mt-6"></div>
               <div className="relative pt-4 flex flex-col sm:flex-row sm:items-end sm:space-x-6">
                 <div
-                  onClick={() => setImageOpen(true)}
-                  className="relative -mt-20 h-36 w-36 rounded-full border-4 border-white shadow-lg overflow-hidden bg-gray-100 cursor-pointer"
+                  onClick={() => admin && setImageOpen(true)}
+                  className={`relative -mt-20 h-36 w-36 rounded-full border-4 border-white shadow-lg overflow-hidden bg-gray-100 group ${
+                    admin ? "cursor-pointer" : ""
+                  }`}
                 >
+                  {/* User avatar */}
                   <img
                     src={profileData?.avatar || "/placeholder.svg"}
                     alt="User avatar"
                     className="h-full w-full object-cover"
                     onError={(e) => (e.currentTarget.style.display = "none")}
                   />
+
+                  {/* Hover overlay with pencil icon */}
+                  {admin && (
+                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <Pencil className="text-white w-10 h-10" />
+                    </div>
+                  )}
                 </div>
+
                 <div className="flex-1">
                   <h1 className="text-3xl font-bold">
                     {profileData?.user_name}
@@ -212,9 +232,9 @@ const Profile = () => {
       )}
 
       {/* Avatar Modal */}
-      {imageOpen && (
+      {imageOpen && admin && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="relative bg-white rounded-lg shadow-lg max-w-lg w-full p-4">
+          <div className="relative bg-white rounded-lg shadow-lg max-w-lg w-full p-4 mx-4">
             <button
               onClick={() => setImageOpen(false)}
               className="absolute top-3 right-3 text-gray-600 hover:text-red-500 bg-red-100 p-2 rounded-full cursor-pointer"

@@ -12,6 +12,7 @@ const PostDetail = () => {
   const [post, setPost] = useState<{
     post_id: number;
     user_name: string;
+    user_id: number;
     user_jobrole: string;
     post_content: string;
     created_at: string;
@@ -123,6 +124,7 @@ const PostDetail = () => {
           key={post.post_id}
           id={post.post_id}
           author={{
+            id: post.user_id,
             name: post.user_name,
             title: post.user_jobrole,
             avatar: "/placeholder.svg",

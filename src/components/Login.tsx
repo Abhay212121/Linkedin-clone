@@ -31,9 +31,11 @@ export const Login: React.FC<{ registerFlag?: boolean }> = ({
           console.log(response.data.msg);
         } else {
           const backendErrors: Record<string, string> = {};
-          response.data.errors.forEach((err: { path: string; msg: string }) => {
-            backendErrors[err.path] = err.msg;
-          });
+          response?.data?.errors?.forEach(
+            (err: { path: string; msg: string }) => {
+              backendErrors[err.path] = err.msg;
+            }
+          );
           setServerErrors(backendErrors);
         }
       };
