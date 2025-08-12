@@ -46,7 +46,7 @@ export const Login: React.FC<{ registerFlag?: boolean }> = ({
           console.log(response.data.msg);
           localStorage.setItem("token", response.data.token);
           localStorage.setItem("name", response.data.userName);
-          localStorage.setItem("name", response.data.userId);
+          localStorage.setItem("userId", response.data.userId);
           console.log(response.data);
           localStorage.setItem("job", response.data.userJob);
           navigate("/");
